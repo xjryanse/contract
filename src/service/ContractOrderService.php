@@ -13,7 +13,7 @@ class ContractOrderService extends Base implements MainModelInterface {
     use \xjryanse\traits\MainModelTrait;
 
     protected static $mainModel;
-    protected static $mainModelClass = '\\app\\contract\\model\\ContractOrder';
+    protected static $mainModelClass = '\\xjryanse\\contract\\model\\ContractOrder';
     
     /**
      *

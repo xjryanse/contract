@@ -15,7 +15,7 @@ class ContractService extends Base implements MainModelInterface {
     use \xjryanse\traits\MainModelTrait;
 
     protected static $mainModel;
-    protected static $mainModelClass = '\\app\\contract\\model\\Contract';
+    protected static $mainModelClass = '\\xjryanse\\contract\\model\\Contract';
 
     /**
      * 额外详情信息
