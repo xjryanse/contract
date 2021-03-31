@@ -1,0 +1,17 @@
+{
+    "name": "xjryanse/contract",
+    "description": "合同管理模块",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xjryanse",
+            "email": "xjryanse@sina.com"
+        }
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+          "xjryanse\\contract\\": "src/"
+        }
+    }
+}
