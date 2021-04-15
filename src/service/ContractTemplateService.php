@@ -3,76 +3,47 @@
 namespace xjryanse\contract\service;
 
 use xjryanse\system\interfaces\MainModelInterface;
-use xjryanse\order\service\OrderService;
-use xjryanse\logic\Arrays;
+use xjryanse\system\model\SystemFile;
+use think\facade\Request;
+use Exception;
 
 /**
- * 
+ * 合同模板
  */
-class ContractService extends Base implements MainModelInterface {
+class ContractTemplateService extends Base implements MainModelInterface {
 
     use \xjryanse\traits\InstTrait;
     use \xjryanse\traits\MainModelTrait;
 
     protected static $mainModel;
-    protected static $mainModelClass = '\\xjryanse\\contract\\model\\Contract';
+    protected static $mainModelClass = '\\xjryanse\\contract\\model\\ContractTemplate';
 
     /**
-     * 额外详情信息
-     */
-    public static function extraDetail(&$item, $uuid) {
-        if(!$item){ return false;}
-        self::commExtraDetail($item, $uuid);
-        //合同订单:逗号分隔
-        $con[]      = ['contract_id','=',$uuid]; 
-        $orderIds   = ContractOrderService::mainModel()->where( $con )->column('order_id');
-        $item->SCorder_id   = count($orderIds);         //订单数量
-        $item->Dorder_id    = implode(',', $orderIds);  //订单逗号分隔
-        return $item;
-    }
-    
-    /**
-     * 带子表的添加
-     * @param type $groupType   分组类型
-     * @param type $orderIds
-     * @param array $data
-     */
-    public static function addWithSub( $contractType, $orderIds, $data=[] )
-    {
-        $data['contract_type'] = $contractType;
-        $res = self::save($data);
-        foreach( $orderIds as $orderId ){
-            $tmpData                = [];
-            $tmpData['contract_id']    = $res['id'];
-            $tmpData['order_id']    = $orderId;
-            ContractOrderService::save( $tmpData );
-        }
-        return $res;
-    }        
-    /**
+     * 获取公版合同
      * 
-     * @param type $data
-     * @param type $uuid
-     * @return type
      */
-    public static function extraAfterUpdate(&$data, $uuid) {
-        //审核不通过，更新订单记录状态
-        if(isset( $data['audit_status'])){
-            $contractFieldValue = $data['audit_status'] == 2 ? 0 : 1;
+    public static function getCommonFile($cate,$orderType):SystemFile
+    {
+        $con[] = ['cate','=', $cate ];
+        $con[] = ['type','=','common'];
+        $con[] = ['order_type','=',$orderType ];
+        $info = self::find( $con );
 
-            $info = self::getInstance( $uuid )->get(0);
-            $contractType   = Arrays::value($info,'contract_type');
-            $contractField  = 'is_contract_'.$contractType;
-            $con[]          = ['contract_id','=',$uuid];
-            $orderIds       = ContractOrderService::mainModel()->where( $con )->column('order_id');
-            //更新订单id
-            foreach( $orderIds as $orderId ){
-                if( OrderService::mainModel()->hasField( $contractField ) && OrderService::getInstance( $orderId )->get()){
-                    OrderService::getInstance( $orderId )->update( [$contractField =>$contractFieldValue] );
-                }
-            }
+        if(!$info){
+            throw new Exception('合同模板不存在'.$cate.'-'.$orderType);
         }
+        return $info['file_id'];
     }
+    /**
+     * 获取公版合同
+     */
+    public static function getCommon($cate,$orderType)
+    {
+        $con[] = ['cate','=', $cate ];
+        $con[] = ['type','=','common'];
+        $con[] = ['order_type','=',$orderType ];
+        return self::find( $con );
+    }    
     /**
      *
      */
