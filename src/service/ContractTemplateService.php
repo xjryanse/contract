@@ -14,6 +14,7 @@ class ContractTemplateService extends Base implements MainModelInterface {
 
     use \xjryanse\traits\InstTrait;
     use \xjryanse\traits\MainModelTrait;
+    use \xjryanse\traits\MainModelQueryTrait;
 
     protected static $mainModel;
     protected static $mainModelClass = '\\xjryanse\\contract\\model\\ContractTemplate';
@@ -22,28 +23,28 @@ class ContractTemplateService extends Base implements MainModelInterface {
      * 获取公版合同
      * 
      */
-    public static function getCommonFile($cate,$orderType):SystemFile
-    {
-        $con[] = ['cate','=', $cate ];
-        $con[] = ['type','=','common'];
-        $con[] = ['order_type','=',$orderType ];
-        $info = self::find( $con );
+    public static function getCommonFile($cate, $orderType): SystemFile {
+        $con[] = ['cate', '=', $cate];
+        $con[] = ['type', '=', 'common'];
+        $con[] = ['order_type', '=', $orderType];
+        $info = self::find($con);
 
-        if(!$info){
-            throw new Exception('合同模板不存在'.$cate.'-'.$orderType);
+        if (!$info) {
+            throw new Exception('合同模板不存在' . $cate . '-' . $orderType);
         }
         return $info['file_id'];
     }
+
     /**
      * 获取公版合同
      */
-    public static function getCommon($cate,$orderType)
-    {
-        $con[] = ['cate','=', $cate ];
-        $con[] = ['type','=','common'];
-        $con[] = ['order_type','=',$orderType ];
-        return self::find( $con );
-    }    
+    public static function getCommon($cate, $orderType) {
+        $con[] = ['cate', '=', $cate];
+        $con[] = ['type', '=', 'common'];
+        $con[] = ['order_type', '=', $orderType];
+        return self::find($con);
+    }
+
     /**
      *
      */
